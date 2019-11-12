@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:oauth="http://www.mulesoft.org/schema/mule/oauth" xmlns:spring="http://www.mulesoft.org/schema/mule/spring" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/oauth http://www.mulesoft.org/schema/mule/oauth/current/mule-oauth.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
+	<flow name="getAllAccounts" doc:id="7d227656-2bc7-460d-bf67-4653bfe9e789" >
+		<logger level="INFO" doc:name="startGetAllAccounts" doc:id="eed9c587-1e6b-4484-8f3d-fe8dcebe9ddf" message="Starting getAllAccounts"/>
+		<salesforce:query doc:name="getAllAccounts" doc:id="3ca1897b-a902-4d9f-84f2-015b6045d18d" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query >SELECT Name, id
+FROM Account</salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="payloadTOJSON" doc:id="434ff51e-0981-4a13-b60c-5d4ddc5ec482">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map  {
+		num: $$,
+		name: $.Name,
+		id: $.Id
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="PrintOutPayload" doc:id="69548921-6a2f-4248-bcc6-a69fc9bfe2d6" message="#[payload]"/>
+		<logger level="INFO" doc:name="endGetAllAccounts" doc:id="f971b77c-dbd3-407c-b057-6c87ef1fc209" message="End of getAllAccounts."/>
+	</flow>
+	<flow name="getAccountByID" doc:id="ea28a815-045d-4674-8a34-5ce12f9df66e">
+		<logger level="INFO" doc:name="startGetAccountByID" doc:id="b098bdb2-7f5f-4e72-8616-bc85ba12f694" message="Start getAccountByID."/>
+		<salesforce:query doc:name="getAccountByID" doc:id="922d0a5f-f609-4278-803c-9bd0863c19ee" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query>SELECT Name, id FROM Account WHERE id = ':id'
+</salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	'id' : vars.id
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="payloadTOJSON" doc:id="538fa3c0-bf43-44c0-b517-9f966bb853f8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map {
+	name: $.Name,
+	id: $.Id
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="PrintOutPayload" doc:id="7fbe3ae3-5114-4d1e-8e14-21e48719f761" message="#[payload]"/>
+		<logger level="INFO" doc:name="endGetAccountByID" doc:id="13db84e2-5f92-4650-b63a-5d103696fd40" message="End of getAccountByID."/>
+	</flow>
+	<flow name="createAccount" doc:id="32987d8f-be45-4a89-beec-c9c820199da3" >
+		<logger level="INFO" doc:name="startCreateAccount" doc:id="075a160a-97d6-404c-a83c-717a1cf1786b" message="Start CreateAccount." />
+		<ee:transform doc:name="requestToCreateObj" doc:id="ff5e69cc-bfba-4ef9-8531-3687f4d62a7d">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[payload]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="CreateAccount" doc:id="48633dfd-02a0-4771-a39e-069354274961" config-ref="Salesforce_Config" type="Account" />
+		<ee:transform doc:name="payloadTOJSON" doc:id="4cef6a03-9180-43f1-b8da-4638d1660413">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="DEBUG" doc:name="PrintOutPayload" doc:id="653a7175-d182-43f0-8a28-f409f4ac3dbc" message="#[payload]" />
+		<logger level="INFO" doc:name="endCreateAccount" doc:id="ea8ee717-5e08-475e-9f01-63f27be08acc" message="End of CreateAccount." />
+	</flow>
+	<flow name="deleteAccount" doc:id="79eab736-5147-4437-89a2-c955f44089e5" >
+		<logger level="INFO" doc:name="startDeleteAccount" doc:id="bd00882b-cf56-4328-a565-e7b319b2dfc6" message="Start DeleteAccount." />
+		<ee:transform doc:name="payloadTODeleteArray" doc:id="7cc2f703-d9d6-4e17-932d-c008d1aa1b25">
+			<ee:message>
+				<ee:set-payload><![CDATA[payload.Id]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="2066cdb8-9be8-4c66-b022-c839bd3bc1b6" >
+			<route >
+				<salesforce:delete doc:name="DeleteInSalesforce" doc:id="ddb6fe5a-d982-4a9b-8a56-9bf99acacc08" config-ref="Salesforce_Config" />
+			</route>
+			<route >
+				<foreach doc:name="DeleteAccountInLocalDB" doc:id="397ff8ca-a6b4-4002-8219-d24b281df137" collection="#[payload]">
+					<db:delete doc:name="DeleteInLocalDB" doc:id="65e8ad49-b1be-4680-9a89-74e8defcf68a" config-ref="LocalSQLDB">
+					<db:sql>DELETE FROM Account WHERE Id = :currentID</db:sql>
+					<db:input-parameters><![CDATA[#['currentID': payload]]]></db:input-parameters>
+				</db:delete>
+				</foreach>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="payloadTOJSON" doc:id="4ad9a972-82e8-48c8-84e8-448694c4eb62" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="PrintOutPayload" doc:id="38c673a8-b18b-4a5b-9df2-bcc64357a0f0" message="#[payload]"/>
+		<logger level="INFO" doc:name="endDeleteAccount" doc:id="341cac26-9ace-4c62-907e-f92f44dd70d2" message="End of DeleteAccount" />
+	</flow>
+	<flow name="updateAccount" doc:id="9e426d77-24f9-4ee2-ab3a-4c67a1ffb2b9">
+		<logger level="INFO" doc:name="startUpdateAccount" doc:id="9980a972-d311-4bca-810f-78db85e7fbe7" message="Start UpdateAccount" />
+		<ee:transform doc:name="JavaTOUpdateArray" doc:id="fe1a09f4-7efa-4fc3-8d5c-8f587e168e9f">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Id: vars.id,
+	Name: payload.Name,
+	BillingStreet: payload.BillingStreet,
+	BillingCity: payload.BillingCity,
+	BillingState: payload.BillingState,
+	BillingPostalCode: payload.BillingPostalCode,
+	BillingCountry: payload.BillingCountry,
+	ShippingStreet: payload.ShippingStreet,
+	ShippingCity: payload.ShippingCity,
+	ShippingState: payload.ShippingState,
+	ShippingPostalCode: payload.ShippingPostalCode,
+	ShippingCountry: payload.ShippingCountry,
+	Fax: payload.Fax,
+	AccountNumber: payload.AccountNumber,
+	Website: payload.Website,
+	Sic: payload.Sic,
+	Industry: payload.Industry,
+	Ownership: payload.Ownership,
+	TickerSymbol: payload.TickerSymbol,
+	Description: payload.Description,
+	Rating: payload.Rating,
+	Site: payload.Site,
+	Jigsaw: payload.Jigsaw,
+	AccountSource: payload.AccountSource,
+	DunsNumber: payload.DunsNumber,
+	Tradestyle: payload.TradeStyle,
+	NaicsCode: payload.NaicsCode,
+	NaicsDesc: payload.NaicsDesc,
+	SicDesc: payload.SicDesc
+}]]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="9c9178e4-734c-4af3-afd9-5529b2663714" >
+			<route >
+				<salesforce:update doc:name="updateSalesforce" doc:id="5d43ddae-7ba3-48b9-96d0-335d81536cf9" config-ref="Salesforce_Config" type="Account">
+		</salesforce:update>
+			</route>
+			<route >
+				<db:update doc:name="updateDatabase" doc:id="3ad3df24-36fc-400f-9a49-d3fe7b5447ad" config-ref="LocalSQLDB" >
+					<db:sql >UPDATE Account SET UserName = :Username Where Id = :Id</db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	"Id": vars.id,
+    "Username": payload.Name
+}]]]></db:input-parameters>
+				</db:update>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="payloadTOJSON" doc:id="183e19d1-bd6a-4b1a-a782-264817da0462">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="PrintOutPayload" doc:id="dce02c8b-2bb3-482d-83b9-4e221b6d09f4" message="#[payload]" />
+		<logger level="INFO" doc:name="endUpdateAccount" doc:id="e4b4bff5-0e96-4c43-a504-9b3e56d862fe" message="End of UpdateAccount" />
+	</flow>
+	<flow name="syncSalesforceAccountsWithLocalDB" doc:id="0e9cd906-7013-4664-9ec1-b1b053601568">
+		<scheduler doc:name="Scheduler" doc:id="0bd3350a-dd92-4981-9b8d-8e14db5757b5" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="2" timeUnit="MINUTES" />
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="BeginDatabaseSync" doc:id="1d3eccff-e294-4392-a303-0ca7e8fa9956" message="Begin syncing databases..."/>
+		<salesforce:query doc:name="getAllAccounts" doc:id="7ee30ea7-0757-4a7b-a57a-9dd1c9427e64" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query>SELECT Name, Id
+FROM Account</salesforce:salesforce-query>
+		</salesforce:query>
+		<batch:job jobName="syncWithLocalDB" doc:id="1fc2e4aa-0ad3-4b3c-92d4-5dd175c1491b">
+			<batch:process-records >
+				<batch:step name="doesAccountExistInLocalDB" doc:id="e3947500-a612-4394-8d18-79f277228d1a" >
+					<set-variable value="#[payload]" doc:name="Set Variable AccountToAdd" doc:id="ce33a2a0-ac13-4959-b000-050c7720b458" variableName="AccountToAdd"/>
+					<db:select doc:name="CheckLocalDBForAccount" doc:id="4c256571-0ac4-4b28-8548-51184e214664" config-ref="LocalSQLDB">
+						<db:sql>SELECT UserName, Id FROM Account WHERE UserName = :currentAccount AND Id = :currentID</db:sql>
+						<db:input-parameters><![CDATA[#[{
+'currentAccount' : payload.Name,
+'currentID': payload.Id
+}]]]></db:input-parameters>
+					</db:select>
+					<set-variable value="#[payload]" doc:name="Set Variable AccountInDB" doc:id="5a665c2b-47ca-4f02-b975-c8fad13c00eb" variableName="IsAccountInDB"/>
+					<choice doc:name="Choice" doc:id="1c4fd2aa-8377-4e87-b3f3-a4ff7fa6f7f1">
+						<when expression="#[isEmpty(vars.IsAccountInDB)]">
+							<db:insert doc:name="insertNonExistantAccount" doc:id="b0746415-8192-4200-aebe-99c2ac1e74ce" config-ref="LocalSQLDB">
+					<db:sql>INSERT INTO Account (UserName, Id) VALUES (:cname, :cID)</db:sql>
+								<db:input-parameters ><![CDATA[#[{
+'cname': vars.AccountToAdd.Name,
+'cID': vars.AccountToAdd.Id
+}]]]></db:input-parameters>
+				</db:insert>
+							<ee:transform doc:name="payloadTOJSON" doc:id="2bb5bc73-6f74-4525-a6c4-ec123ff07beb">
+								<ee:message>
+									<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+							<logger level="INFO" doc:name="logPayload" doc:id="8b33b67d-216b-491d-9320-a6f03588d8b2" message="#[payload]"/>
+						</when>
+						<otherwise >
+							<logger level="INFO" doc:name="noNewAccounts" doc:id="922daffe-146d-4311-b4e4-4ed2b9f60517" message="No new accounts to create."/>
+						</otherwise>
+					</choice>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<ee:transform doc:name="payloadTOJSON" doc:id="972b9def-6cdc-413f-8ae0-14db9c1b09db" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="LogBatchResults" doc:id="07701b16-1922-4bc4-9a91-48425c58f233" message="#[payload]"/>
+				<logger level="INFO" doc:name="EndDatabaseSync" doc:id="0ce984c0-7199-4924-bc41-87175f594731" message="End Syncing Databases... Salesforce data pushed to Local database."/>
+			</batch:on-complete>
+		</batch:job>
+	</flow>
+</mule>

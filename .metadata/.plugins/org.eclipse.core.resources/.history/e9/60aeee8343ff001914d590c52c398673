@@ -1,0 +1,52 @@
+#%RAML 1.0
+title: SalesForce Accounts
+# Add, Update, Retrieve, Query and Delete an Account
+securitySchemes:
+  basic: !include basicSecurityScheme.raml
+
+securedBy: [basic]  
+/account:
+  get: #Retrieve all accounts
+    displayName: GetAllAccounts
+    description: Returns all accounts available in the system (not needed, but available)
+    responses:
+        200:   
+          body:
+            application/json:
+              example:
+                
+  post: #update
+    displayName: Update existing account
+    description: Updates existing account (Send ID of existing account)
+    responses:
+      201:
+        body:
+          application/json:
+            #account object post updated (And add before?)
+  delete: #Delete account
+    displayName: DeleteAccount
+    description: Deletes accounts given (JSON array)
+    responses:
+      204:
+        body:
+          application/json:
+            #delete requested object
+            
+  /{id}: #Retrieve a specific account by name
+    get:
+      displayName: GetAccount
+      description: Gets a specific account.
+      responses:
+        200:
+          body:
+            application/json:
+              #return account object by ID             
+    patch: #Add
+      displayName: AddNewAccount
+      description: Adds a new account record.
+      responses:
+        200:
+          body:
+            application/json:
+              example: # replace with actual
+                message: Item Updated (Not really)           

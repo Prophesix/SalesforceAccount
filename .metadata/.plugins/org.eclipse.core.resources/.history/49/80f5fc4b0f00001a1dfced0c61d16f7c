@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <http:listener-config name="ExperienceLayerEndpoint(Interface)">
+        <http:listener-connection host="0.0.0.0" port="708" />
+    </http:listener-config>
+    <apikit:config name="salesforce-accounts-config" api="salesforce-accounts.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <http:request-config name="ProcessLayerEndPoint" doc:name="HTTP Request configuration" doc:id="2a74c072-c575-4136-b09e-dfe205589f60" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<http:listener-config name="ExperienceLayerEndpoint(Console)" doc:name="HTTP Listener config" doc:id="7c7d0fb9-16af-4879-b244-cae9c32a5d94" >
+		<http:listener-connection host="0.0.0.0" port="709" />
+	</http:listener-config>
+	<flow name="salesforce-accounts-main">
+        <http:listener config-ref="ExperienceLayerEndpoint(Interface)" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="salesforce-accounts-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="salesforce-accounts-console">
+        <http:listener config-ref="ExperienceLayerEndpoint(Console)" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="salesforce-accounts-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="delete:\account:salesforce-accounts-config">
+		<logger level="INFO" message="EXPLayer Start DELETE Call." doc:name="StartDeleteCall"/>
+		<http:request method="DELETE" doc:name="CallSapiLayer(Delete)(DeleteAccountByID)" doc:id="be03588e-84f9-45b5-ac89-fbb6c834906f" config-ref="ProcessLayerEndPoint" path="/api/account"/>
+		<logger level="INFO" doc:name="EndDeleteCall" doc:id="335cf423-961d-4797-972d-56c5cdc37618" message="EXPLayer End DELETE call."/>
+    </flow>
+    <flow name="patch:\account\(id):salesforce-accounts-config">
+        <logger level="INFO" doc:name="StartPatchCall" doc:id="4f7b6ca7-aed7-4dff-b53a-3e0a33693b64" message="EXPLayer Start PATCH call." />
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:id="9eb94053-c7b0-4c62-b672-4038c414861f">
+            <ee:variables>
+                <ee:set-variable variableName="id"><![CDATA[attributes.uriParams.'id']]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<http:request method="PATCH" doc:name="CallSapiLayer(Patch)(UpdateAccountByID)" doc:id="dc6061a0-9bd3-490e-9dec-b6b7bbdefcfc" config-ref="ProcessLayerEndPoint" path="/api/account/{id}" sendCorrelationId="ALWAYS"/>
+		<logger level="INFO" doc:name="EndPatchCall" doc:id="63336e5b-ef95-43f2-a840-07717bdb6260" message="EXPLayer End PATCH call." />
+    </flow>
+    <flow name="get:\account:salesforce-accounts-config">
+        <logger level="INFO" message="EXPLayer Start GET call." doc:name="StartGetCall"/>
+		<http:request method="GET" doc:name="CallSapiLayer(GET)(GetAllAccounts)" doc:id="c989d3cb-4b31-40e5-b36d-d4da8151b259" config-ref="ProcessLayerEndPoint" path="/api/account" />
+		<logger level="INFO" doc:name="EndGetCall" doc:id="3026e4f9-e017-4f1a-b604-e7123bc7859b" message="EXPLayer End GET call." />
+    </flow>
+    <flow name="get:\account\(id):salesforce-accounts-config">
+        <logger level="INFO" doc:name="StartGetCall" doc:id="8603d477-b47f-4026-8780-9e930d0d2a91" message="EXPLayer Start GET call." />
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:id="f759236d-530e-4741-b760-8155dbe0c1b2">
+            <ee:variables>
+                <ee:set-variable variableName="id"><![CDATA[attributes.uriParams.'id']]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<http:request method="GET" doc:name="CallSapiLayer(Get)(GetAccountByID)" doc:id="5456745d-e729-4e48-ab4e-22f470a496be" config-ref="ProcessLayerEndPoint" path="/api/account/{id}" sendCorrelationId="ALWAYS">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	id : vars.id
+}]]]></http:uri-params>
+		</http:request>
+		<logger level="INFO" doc:name="EndGetCall" doc:id="178decab-756e-4f17-a146-06e0ef540f02" message="EXPLayer End GET call." />
+    </flow>
+    <flow name="post:\account:salesforce-accounts-config">
+        <logger level="INFO" doc:name="StartPostCall" doc:id="2d4dd7b3-64fe-4bd5-bb0a-15b33a211d0e" message="EXPLayer Start POST call." />
+		<http:request method="POST" doc:name="CallSapiLayer(Post)(CreateAccount)" doc:id="b2c5c088-45e6-485d-8610-ecac062fc386" config-ref="ProcessLayerEndPoint" path="/api/account" />
+		<logger level="INFO" doc:name="EndPostCall" doc:id="86813178-0fd9-4ab0-bf0f-4b00b1f95420" message="EXPLayer End POST call." />
+    </flow>
+</mule>

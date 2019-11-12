@@ -1,0 +1,625 @@
+{
+	"info": {
+		"_postman_id": "01554b09-7363-49a0-9faa-a88ab3098f7a",
+		"name": "SalesForceAccountManagement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SysLayer GetAllAccounts",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"account"
+					]
+				},
+				"description": "Returns all accounts available.\n\nReturns Json array object:\n\n[  \n  {\n    \"num\": 0,\n    \"name\": \"Rue Marcel Sembat\",\n    \"id\": \"0013k00002bWaM8AAK\"\n  },\n  {\n    \"num\": 1,\n    \"name\": \"Azemo\",\n    \"id\": \"0013k00002bWaM9AAK\"\n  }\n]"
+			},
+			"response": []
+		},
+		{
+			"name": "SysLayer GetAccountByID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/account/0013k00002dO070AAC",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"account",
+						"0013k00002dO070AAC"
+					]
+				},
+				"description": "Gets an account by ID"
+			},
+			"response": []
+		},
+		{
+			"name": "SysLayer Create Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"testing\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"account"
+					]
+				},
+				"description": "Submits an account object to be created."
+			},
+			"response": []
+		},
+		{
+			"name": "SysLayer DeleteAccountByID",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Id\" : [\"0013k00002dV2nhAAC\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"account"
+					]
+				},
+				"description": "Delete a specified account."
+			},
+			"response": []
+		},
+		{
+			"name": "SysLayer UpdateAccountByID",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"updated for testing\",\n    \"BillingStreet\": \"String\",\n    \"BillingCity\": \"String\",\n    \"BillingState\": \"String\",\n    \"BillingPostalCode\": \"String\",\n    \"BillingCountry\": \"String\",\n    \"ShippingStreet\": \"String\",\n    \"ShippingCity\": \"String\",\n    \"ShippingState\": \"String\",\n    \"ShippingPostalCode\": \"String\",\n    \"ShippingCountry\": \"String\",\n    \"Fax\": \"String\",\n    \"AccountNumber\": \"String\",\n    \"Website\": \"String\",\n    \"Sic\": \"String\",\n    \"Industry\": \"String\",\n    \"Ownership\": \"String\",\n    \"TickerSymbol\": \"String\",\n    \"Description\": \"String\",\n    \"Rating\": \"String\",\n    \"Site\": \"String\",\n    \"Jigsaw\": \"String\",\n    \"AccountSource\": \"String\",\n    \"DunsNumber\": \"String\",\n    \"TradeStyle\": \"String\",\n    \"NaicsCode\": \"String\",\n    \"NaicsDesc\": \"String\",\n    \"SicDesc\": \"String\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/account/0013k00002dV33jAAC",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"account",
+						"0013k00002dV33jAAC"
+					]
+				},
+				"description": "Submits an account object to be updated."
+			},
+			"response": []
+		},
+		{
+			"name": "ExpLayer Authenticated GetAllAccounts",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:400/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "400",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExpLayer Authenticated GetAccountByID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:400/api/account/0013k00002dV33jAAC",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "400",
+					"path": [
+						"api",
+						"account",
+						"0013k00002dV33jAAC"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExpLayer Authenticated DeleteAccountByID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Id\" : [\"0013k00002dV33jAAC\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:400/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "400",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExpLayer Authenticated CreateAccount",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"newAccount1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:400/api/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "400",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExpLayer Authenticated UpdateAccountByID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"big name change\",\n    \"BillingStreet\": \"String\",\n    \"BillingCity\": \"String\",\n    \"BillingState\": \"String\",\n    \"BillingPostalCode\": \"String\",\n    \"BillingCountry\": \"String\",\n    \"ShippingStreet\": \"String\",\n    \"ShippingCity\": \"String\",\n    \"ShippingState\": \"String\",\n    \"ShippingPostalCode\": \"String\",\n    \"ShippingCountry\": \"String\",\n    \"Fax\": \"String\",\n    \"AccountNumber\": \"String\",\n    \"Website\": \"String\",\n    \"Sic\": \"String\",\n    \"Industry\": \"String\",\n    \"Ownership\": \"String\",\n    \"TickerSymbol\": \"String\",\n    \"Description\": \"String\",\n    \"Rating\": \"String\",\n    \"Site\": \"String\",\n    \"Jigsaw\": \"String\",\n    \"AccountSource\": \"String\",\n    \"DunsNumber\": \"String\",\n    \"TradeStyle\": \"String\",\n    \"NaicsCode\": \"String\",\n    \"NaicsDesc\": \"String\",\n    \"SicDesc\": \"String\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:400/api/account/0013k00002dVSzEAAW",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "400",
+					"path": [
+						"api",
+						"account",
+						"0013k00002dVSzEAAW"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HTTPS/Authed ExpLayer GetAllAccounts",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:443/api/account",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "443",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HTTPS/Authed ExpLayer GetAccountByID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:443/api/account/0013k00002bWaMAAA0",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "443",
+					"path": [
+						"api",
+						"account",
+						"0013k00002bWaMAAA0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HTTPS/Authed ExpLayer DeleteAccountByID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Id\" : [\"0013k00002dV33jAAC\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:443/api/account",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "443",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HTTPS/Authed ExpLayer CreateAccount",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"newAccount1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:443/api/account",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "443",
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HTTPS/Authed ExpLayer UpdateAccountByID",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"big name change\",\n    \"BillingStreet\": \"String\",\n    \"BillingCity\": \"String\",\n    \"BillingState\": \"String\",\n    \"BillingPostalCode\": \"String\",\n    \"BillingCountry\": \"String\",\n    \"ShippingStreet\": \"String\",\n    \"ShippingCity\": \"String\",\n    \"ShippingState\": \"String\",\n    \"ShippingPostalCode\": \"String\",\n    \"ShippingCountry\": \"String\",\n    \"Fax\": \"String\",\n    \"AccountNumber\": \"String\",\n    \"Website\": \"String\",\n    \"Sic\": \"String\",\n    \"Industry\": \"String\",\n    \"Ownership\": \"String\",\n    \"TickerSymbol\": \"String\",\n    \"Description\": \"String\",\n    \"Rating\": \"String\",\n    \"Site\": \"String\",\n    \"Jigsaw\": \"String\",\n    \"AccountSource\": \"String\",\n    \"DunsNumber\": \"String\",\n    \"TradeStyle\": \"String\",\n    \"NaicsCode\": \"String\",\n    \"NaicsDesc\": \"String\",\n    \"SicDesc\": \"String\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:443/api/account/0013k00002dVSzEAAW",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "443",
+					"path": [
+						"api",
+						"account",
+						"0013k00002dVSzEAAW"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

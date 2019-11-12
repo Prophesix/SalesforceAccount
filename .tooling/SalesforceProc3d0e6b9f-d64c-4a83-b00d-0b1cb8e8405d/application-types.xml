@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="accounts" format="json">
+      <types:shape format="weave" example="examples/accounts.json"><![CDATA[%dw 2.0
+
+type accounts = Array<{|  accountID: Number {"typeId": "int"},   country: String,   street: String,   state: String,   name: String,   city: String,   postal: String|}> {"example": "[{\"accountID\":5039,\"country\":\"United States\",\"street\":\"77 Geary Street\",\"state\":\"California\",\"name\":\"Maxine Mule\",\"city\":\"San Francisco\",\"postal\":\"94108\"},{\"accountID\":5043,\"country\":\"United States\",\"street\":\"77 Geary Street\",\"state\":\"California\",\"name\":\"Max Mule\",\"city\":\"San Francisco\",\"postal\":\"94108\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="account" format="json">
+      <types:shape format="weave" example="examples/account.json"><![CDATA[%dw 2.0
+
+type account = {|
+  Name: String, 
+  BillingStreet: String, 
+  BillingCity: String, 
+  BillingState: String, 
+  BillingPostalCode: String, 
+  BillingCountry: String, 
+  ShippingStreet: String, 
+  ShippingCity: String, 
+  ShippingState: String, 
+  ShippingPostalCode: String, 
+  ShippingCountry: String, 
+  Fax: String, 
+  AccountNumber: String, 
+  Website: String, 
+  Sic: String, 
+  Industry: String, 
+  Ownership: String, 
+  TickerSymbol: String, 
+  Description: String, 
+  Rating: String, 
+  Site: String, 
+  Jigsaw: String, 
+  AccountSource: String, 
+  DunsNumber: String, 
+  TradeStyle: String, 
+  NaicsCode: String, 
+  NaicsDesc: String, 
+  SicDesc: String
+|} {"example": "{\"Name\":\"test full submission\",\"BillingStreet\":\"String\",\"BillingCity\":\"String\",\"BillingState\":\"String\",\"BillingPostalCode\":\"String\",\"BillingCountry\":\"String\",\"ShippingStreet\":\"String\",\"ShippingCity\":\"String\",\"ShippingState\":\"String\",\"ShippingPostalCode\":\"String\",\"ShippingCountry\":\"String\",\"Fax\":\"String\",\"AccountNumber\":\"String\",\"Website\":\"String\",\"Sic\":\"String\",\"Industry\":\"String\",\"Ownership\":\"String\",\"TickerSymbol\":\"String\",\"Description\":\"String\",\"Rating\":\"String\",\"Site\":\"String\",\"Jigsaw\":\"String\",\"AccountSource\":\"String\",\"DunsNumber\":\"String\",\"TradeStyle\":\"String\",\"NaicsCode\":\"String\",\"NaicsDesc\":\"String\",\"SicDesc\":\"String\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="deleteIDs" format="json">
+      <types:shape format="weave" example="examples/deleteIDs.json"><![CDATA[%dw 2.0
+
+type deleteIDs = {| Id: Array<String> |} {"example": "{\"Id\":[\"0013k00002cMAzzAAG\",\"0013k00002cM2GhAAK\",\"0013k00002cMAfNAAW\"]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="LocalDBStructure" format="json">
+      <types:shape format="weave" example="examples/LocalDatabaseStructure.json"><![CDATA[%dw 2.0
+
+type LocalDBStructure = Array<{|  UserName: String,   Id: String|}> {"example": "[{\"UserName\":\"Bob\",\"Id\":\"0013k00002dVSzEAAW\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#7cc2f703-d9d6-4e17-932d-c008d1aa1b25">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="deleteIDs"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#fe1a09f4-7efa-4fc3-8d5c-8f587e168e9f">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="account"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

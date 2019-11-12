@@ -1,0 +1,11 @@
+salesforce:
+  username: "alexbiglen898@gmail.com"
+  password: "5E1f3eWfD0vo"
+  token: "dtlqz0fz69cKUkRzdQ7T3isE"
+  
+sql:
+  username: "root"
+  host: "localhost"
+  password: "L0L1234fjdosormlc"
+  database: "Database"
+  port: "32771"
