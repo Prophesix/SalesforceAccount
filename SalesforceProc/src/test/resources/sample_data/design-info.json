@@ -1,0 +1,25 @@
+{
+  "sampleData": {
+    "434ff51e-0981-4a13-b60c-5d4ddc5ec482": {
+      "payload": "sample_data/list_json.json"
+    },
+    "bec41184-52c9-4747-a2e7-54968c957c03": {
+      "payload": "sample_data/list_Account_2.dwl"
+    },
+    "bbfe694f-bf09-44d3-b791-b4a2ce2eabdb": {
+      "vars-AccountID": "sample_data/defaultstringtype.dwl"
+    },
+    "fe1a09f4-7efa-4fc3-8d5c-8f587e168e9f": {
+      "payload": "sample_data/list_json_1.json"
+    },
+    "7cc2f703-d9d6-4e17-932d-c008d1aa1b25": {
+      "payload": "sample_data/json.json"
+    },
+    "4ad9a972-82e8-48c8-84e8-448694c4eb62": {
+      "payload": "sample_data/list_result.dwl"
+    },
+    "7601eeb8-0d36-4104-bdb3-c68047113f57": {
+      "payload": "sample_data/json_1.json"
+    }
+  }
+}
