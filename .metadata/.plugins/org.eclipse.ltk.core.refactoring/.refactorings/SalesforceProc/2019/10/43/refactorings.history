@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;salesforceaccount/src/main/mule/salesforce-accounts.xml&apos; to &apos;Interface.xml&apos;" description="Rename resource &apos;salesforce-accounts.xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/mule/salesforce-accounts.xml" name="Interface.xml" stamp="1571672305883" updateReferences="true"/>
-</session>

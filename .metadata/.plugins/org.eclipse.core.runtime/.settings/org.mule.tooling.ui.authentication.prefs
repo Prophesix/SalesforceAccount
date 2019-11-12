@@ -1,4 +1,0 @@
-authenticated.users=[{"id"\:"36bb4390-b8af-4b21-91df-11e69562aeff","token"\:"17269d03-291a-43f3-a0cf-b4d12d5dd8cf","userId"\:"prophesix","refreshToken"\:"","baseUrl"\:"https\://anypoint.mulesoft.com/"},{"id"\:"40ef2383-0e7c-4445-9db9-a544d95b5b7f","token"\:"064b405e-c7cf-44e4-b13a-64877fd82342","userId"\:"ExampleCRUDApi","refreshToken"\:"","baseUrl"\:"https\://anypoint.mulesoft.com/"}]
-current.token=064b405e-c7cf-44e4-b13a-64877fd82342
-current.user=ExampleCRUDApi
-eclipse.preferences.version=1

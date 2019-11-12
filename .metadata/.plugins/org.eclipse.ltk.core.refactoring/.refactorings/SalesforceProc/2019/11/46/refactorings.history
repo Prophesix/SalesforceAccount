@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;SalesforceProc/src/main/resources/examples/CreateAccountTestInput&apos; to &apos;CreateAccountTestInput.json&apos;" description="Rename resource &apos;CreateAccountTestInput&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/resources/examples/CreateAccountTestInput" name="CreateAccountTestInput.json" stamp="1573509203058" updateReferences="true"/>
-</session>
